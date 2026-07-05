@@ -1,36 +1,33 @@
-# Home Assignment: Processor Bottleneck Analysis With SimpleScalar
+# Lab 2 Extension: Pipelining and Superscalar Design Space
 
-## Purpose
+## Introduction
 
-This assignment extends Lab 2 by changing one architectural feature at a time. Students will identify whether performance is limited by issue policy, pipeline width, functional units, or instruction window size.
+This lab extends the previous processor-design lab. Students change one architectural feature at a time and identify whether performance is limited by issue policy, pipeline width, functional units, or instruction window size.
 
-## Starting Point
-
-Complete Lab 2 before beginning this assignment. Use the same `SimpleScalar/labs/` directory and the same `test-math` PISA binary.
-
-If needed, rebuild for PISA:
+Run setup commands from the cloned repository root:
 
 ```bash
-cd SimpleScalar/simplesim-3.0
+cd /path/to/SimpleScalar
 make clean
 make config-pisa
 make
-cd ../labs
+mkdir -p labs
+cp tests-pisa/bin.little/test-math labs/
 ```
 
-## Part A: More Functional Units in an In-Order Processor
+## Part 1: Increasing Functional Units in an In-Order Processor
 
-Create `config_c.cfg` from the default configuration:
+Create `config_c.cfg`:
 
 ```bash
-cp ../simplesim-3.0/config/default.cfg config_c.cfg
+cp config/default.cfg labs/config_c.cfg
 ```
 
-Set:
+In `labs/config_c.cfg`, set:
 
 ```text
--fetch:ifqsize 1
 -decode:width 1
+-fetch:ifqsize 1
 -issue:width 1
 -issue:inorder true
 -ruu:size 8
@@ -45,16 +42,16 @@ Set:
 Run:
 
 ```bash
-../simplesim-3.0/sim-outorder -config config_c.cfg -redir:sim sim_configc.out ./test-math
+cd labs
+../sim-outorder -config config_c.cfg -redir:sim sim_configc.out ./test-math
 ```
 
 Questions:
 
-1. What is the IPC of configuration C?
-2. Compare C with configuration A from Lab 2. Does adding functional units help an in-order single-issue pipeline?
-3. Which part of the design is the bottleneck?
+1. What is the IPC of `test-math` using this configuration?
+2. Compare this configuration with configuration A from Lab 2. Does adding resources increase performance in an in-order pipeline?
 
-## Part B: More Functional Units With Out-of-Order Issue
+## Part 2: Increasing Functional Units With Out-of-Order Issue
 
 Create `config_d.cfg`:
 
@@ -71,35 +68,41 @@ Change:
 Run:
 
 ```bash
-../simplesim-3.0/sim-outorder -config config_d.cfg -redir:sim sim_configd.out ./test-math
+../sim-outorder -config config_d.cfg -redir:sim sim_configd.out ./test-math
 ```
 
 Questions:
 
-1. What is the IPC of configuration D?
-2. Compare D with C. Does out-of-order execution help when resources are plentiful but the pipeline is narrow?
-3. Create two extra temporary configurations from D:
-   - one with only `-decode:width 4`
-   - one with only `-issue:width 4`
-4. Do either of those single changes improve IPC? Explain why or why not.
+1. What is the IPC using this configuration?
+2. Compare this configuration with Part 1. Does out-of-order execution help when resources are plentiful but pipeline width is narrow?
+3. The system contains four functional units. Find the bottleneck by running multiple simulations based on `config_d.cfg`, changing only one of these parameters to 4 at a time:
 
-## Part C: Wide Pipeline With Few Functional Units
+```text
+-decode:width 4
+-issue:width 4
+```
+
+4. Does performance increase? What is the main bottleneck in configuration D?
+
+## Part 3: Widening the Pipeline
 
 Create `config_e.cfg`:
 
 ```bash
-cp ../simplesim-3.0/config/default.cfg config_e.cfg
+cd /path/to/SimpleScalar
+cp config/default.cfg labs/config_e.cfg
+cd labs
 ```
 
-Set:
+In `config_e.cfg`, set:
 
 ```text
 -fetch:ifqsize 4
 -decode:width 4
+-lsq:size 8
+-ruu:size 8
 -issue:width 4
 -issue:inorder false
--ruu:size 8
--lsq:size 8
 -res:ialu 1
 -res:imult 1
 -res:memport 1
@@ -110,16 +113,15 @@ Set:
 Run:
 
 ```bash
-../simplesim-3.0/sim-outorder -config config_e.cfg -redir:sim sim_confige.out ./test-math
+../sim-outorder -config config_e.cfg -redir:sim sim_confige.out ./test-math
 ```
 
 Questions:
 
-1. What is the IPC of configuration E?
-2. Compare E with configuration B from Lab 2.
-3. Does widening the pipeline front end help if execution resources remain limited?
+1. What is the IPC for this configuration?
+2. Compare this configuration with configuration B from Lab 2. What is the effect of widening the pipeline front end?
 
-## Part D: Wide Pipeline With Many Functional Units
+## Part 4: Wide Pipeline and Many Resources
 
 Create `config_f.cfg`:
 
@@ -127,7 +129,7 @@ Create `config_f.cfg`:
 cp config_e.cfg config_f.cfg
 ```
 
-Change all functional unit counts to 4:
+Set all resource types to 4:
 
 ```text
 -res:ialu 4
@@ -140,16 +142,14 @@ Change all functional unit counts to 4:
 Run:
 
 ```bash
-../simplesim-3.0/sim-outorder -config config_f.cfg -redir:sim sim_configf.out ./test-math
+../sim-outorder -config config_f.cfg -redir:sim sim_configf.out ./test-math
 ```
 
-Questions:
+Question:
 
-1. What is the IPC of configuration F?
-2. Why does this configuration perform better than C, D, or E?
-3. What does this result teach about balanced processor design?
+1. What is the IPC for this configuration?
 
-## Part E: Larger Instruction Window
+## Part 5: Increasing the Instruction Window
 
 Create `config_g.cfg`:
 
@@ -166,33 +166,21 @@ Change:
 Run:
 
 ```bash
-../simplesim-3.0/sim-outorder -config config_g.cfg -redir:sim sim_configg.out ./test-math
+../sim-outorder -config config_g.cfg -redir:sim sim_configg.out ./test-math
 ```
 
-Questions:
+Question:
 
-1. What is the IPC of configuration G?
-2. Compare G with F. Does a larger instruction window improve performance?
-3. Why might the gain from increasing RUU size be smaller than the gain from moving to a balanced 4-way superscalar design?
+1. What is the IPC for this configuration?
 
-## Required Summary Table
+## Summary Table
 
-| Config | Issue mode | Fetch queue | Decode width | Issue width | RUU | LSQ | Functional units | IPC | Main bottleneck |
-| --- | --- | ---: | ---: | ---: | ---: | ---: | --- | ---: | --- |
-| A | in-order | 1 | 1 | 1 | 8 | 8 | one each | | |
-| B | out-of-order | 1 | 1 | 1 | 8 | 8 | one each | | |
-| C | in-order | 1 | 1 | 1 | 8 | 8 | four each | | |
-| D | out-of-order | 1 | 1 | 1 | 8 | 8 | four each | | |
-| E | out-of-order | 4 | 4 | 4 | 8 | 8 | one each | | |
-| F | out-of-order | 4 | 4 | 4 | 8 | 8 | four each | | |
-| G | out-of-order | 4 | 4 | 4 | 16 | 8 | four each | | |
-
-## Submission
-
-Submit:
-
-- The completed summary table.
-- Answers to all questions.
-- A bar chart showing IPC for configurations A through G.
-- A one-page conclusion explaining the main bottleneck in each design.
-- Simulator output files or copied `sim_IPC` lines for every configuration.
+| Config | Issue mode | Fetch queue | Decode width | Issue width | RUU | LSQ | Functional units | IPC |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | --- | ---: |
+| A | in-order | 1 | 1 | 1 | 8 | 8 | one each | |
+| B | out-of-order | 1 | 1 | 1 | 8 | 8 | one each | |
+| C | in-order | 1 | 1 | 1 | 8 | 8 | four each | |
+| D | out-of-order | 1 | 1 | 1 | 8 | 8 | four each | |
+| E | out-of-order | 4 | 4 | 4 | 8 | 8 | one each | |
+| F | out-of-order | 4 | 4 | 4 | 8 | 8 | four each | |
+| G | out-of-order | 4 | 4 | 4 | 16 | 8 | four each | |

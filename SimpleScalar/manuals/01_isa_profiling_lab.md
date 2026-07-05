@@ -1,27 +1,90 @@
-# Lab 1: Instruction Set Profiling With SimpleScalar
+# Lab 1: ISA Profiling
 
-## Purpose
+## Introduction
 
-This lab studies how programs use an instruction set. Students will use `sim-profile` to collect instruction class statistics and compare workloads across Alpha and PISA binaries.
+In this exercise, students run pre-compiled benchmarks to analyze the distribution of instructions they execute. The `sim-profile` simulator is used to collect instruction class statistics. The goal is to understand the characteristics of different programs and compare the PISA and Alpha ISAs.
 
-## Learning Outcomes
-
-After completing this lab, students will be able to:
-
-- Run `sim-profile` with instruction class profiling.
-- Extract total instruction count and instruction class percentages.
-- Identify whether a workload is memory intensive, branch intensive, integer intensive, or floating-point intensive.
-- Compare instruction behavior across two ISAs.
-
-## Preparation
-
-Start from the simulator directory:
+All commands in this lab should be run from the cloned repository root.
 
 ```bash
-cd SimpleScalar/simplesim-3.0
+cd /path/to/SimpleScalar
 ```
 
-For Alpha experiments:
+## Part 1: Profiling Alpha Benchmarks
+
+### Step 1: Configure the Simulator for Alpha
+
+Clean the directory:
+
+```bash
+make clean
+```
+
+Configure for Alpha:
+
+```bash
+make config-alpha
+```
+
+Build the simulators:
+
+```bash
+make
+```
+
+### Step 2: Run the Benchmark Suite
+
+Execute the following commands. After each run, find `sim_num_insn` and the `sim_inst_class_prof` section in the output.
+
+```bash
+./sim-profile -iclass benchmarks/anagram.alpha benchmarks/words < benchmarks/anagram.in
+```
+
+```bash
+./sim-profile -iclass benchmarks/compress95.alpha < benchmarks/compress95.in
+```
+
+```bash
+./sim-profile -iclass benchmarks/go.alpha 50 9 benchmarks/2stone9.in
+```
+
+```bash
+./sim-profile -iclass benchmarks/cc1.alpha -O benchmarks/1stmt.i
+```
+
+In the current repository, `benchmarks/` is directly under the repository root.
+
+### Step 3: Data Collection and Analysis
+
+Record your results in Table 1.
+
+| Benchmark | Total Insts | Load % | Store % | Uncond. Branch % | Cond. Branch % | Integer Compute % | Floating Pt. Compute % |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| `anagram.alpha` | | | | | | | |
+| `go.alpha` | | | | | | | |
+| `compress95.alpha` | | | | | | | |
+| `cc1.alpha` | | | | | | | |
+
+Answer these questions for each benchmark:
+
+1. Is the benchmark memory intensive or computation intensive?
+2. Is the benchmark mainly using integer computation or floating-point computation?
+3. What percentage of instructions are conditional branches?
+4. On average, how many instructions execute between conditional branches?
+
+Use:
+
+```text
+instructions between conditional branches = 100 / conditional branch percentage
+```
+
+## Part 2: Comparing Alpha and PISA ISAs
+
+This part executes the same smaller test programs on both Alpha and PISA configurations.
+
+### Section A: Run Alpha Test Programs
+
+Ensure the simulator is still configured for Alpha. If needed:
 
 ```bash
 make clean
@@ -29,43 +92,7 @@ make config-alpha
 make
 ```
 
-## Part A: Alpha Benchmark Profiling
-
-Run the following commands and save the output for your report.
-
-```bash
-./sim-profile -iclass ../benchmarks/anagram.alpha ../benchmarks/words < ../benchmarks/anagram.in
-```
-
-```bash
-./sim-profile -iclass ../benchmarks/compress95.alpha < ../benchmarks/compress95.in
-```
-
-```bash
-./sim-profile -iclass ../benchmarks/go.alpha 50 9 ../benchmarks/2stone9.in
-```
-
-```bash
-./sim-profile -iclass ../benchmarks/cc1.alpha -O ../benchmarks/1stmt.i
-```
-
-In each output, find:
-
-- `sim_num_insn`
-- the `sim_inst_class_prof` section
-
-Complete Table 1.
-
-| Benchmark | Total instructions | Load % | Store % | Unconditional branch % | Conditional branch % | Integer compute % | Floating-point compute % |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| `anagram.alpha` | | | | | | | |
-| `compress95.alpha` | | | | | | | |
-| `go.alpha` | | | | | | | |
-| `cc1.alpha` | | | | | | | |
-
-## Part B: Alpha Test Program Profiling
-
-Run these smaller Alpha test programs:
+Run:
 
 ```bash
 ./sim-profile -iclass tests-alpha/bin/test-math
@@ -74,18 +101,18 @@ Run these smaller Alpha test programs:
 ./sim-profile -iclass tests-alpha/bin/test-printf
 ```
 
-Complete Table 2.
+Record the results in Table 2.
 
-| Program | Total instructions | Load % | Store % | Unconditional branch % | Conditional branch % | Integer compute % | Floating-point compute % |
+| Benchmark | Total Insts | Load % | Store % | Uncond. Branch % | Cond. Branch % | Integer Compute % | Floating Pt. Compute % |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | `test-math` | | | | | | | |
 | `test-fmath` | | | | | | | |
 | `test-llong` | | | | | | | |
 | `test-printf` | | | | | | | |
 
-## Part C: PISA Test Program Profiling
+### Section B: Run PISA Test Programs
 
-Rebuild for PISA:
+Reconfigure for PISA:
 
 ```bash
 make clean
@@ -93,7 +120,7 @@ make config-pisa
 make
 ```
 
-Run the matching PISA programs:
+Run:
 
 ```bash
 ./sim-profile -iclass tests-pisa/bin.little/test-math
@@ -102,42 +129,17 @@ Run the matching PISA programs:
 ./sim-profile -iclass tests-pisa/bin.little/test-printf
 ```
 
-Complete Table 3.
+Record the results in Table 3.
 
-| Program | Total instructions | Load % | Store % | Unconditional branch % | Conditional branch % | Integer compute % | Floating-point compute % |
+| Benchmark | Total Insts | Load % | Store % | Uncond. Branch % | Cond. Branch % | Integer Compute % | Floating Pt. Compute % |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | `test-math` | | | | | | | |
 | `test-fmath` | | | | | | | |
 | `test-llong` | | | | | | | |
 | `test-printf` | | | | | | | |
 
-## Analysis Questions
+## Final Analysis
 
-Answer the following using your measured data.
+Compare the Alpha and PISA results. Create a histogram using MATLAB, Excel, Python, or another tool comparing a key metric, such as total instruction count for each test program across the two ISAs.
 
-1. Which Alpha benchmark is most memory intensive? Use load and store percentages to justify your answer.
-2. Which benchmark or test program has the highest conditional branch percentage?
-3. For each Alpha benchmark in Table 1, estimate the average number of executed instructions between conditional branches:
-
-```text
-instructions between conditional branches = 100 / conditional branch percentage
-```
-
-4. Which test program uses floating-point instructions most heavily?
-5. Compare Alpha and PISA for the four test programs. Which ISA executes more total instructions for the same program? Is the trend the same for every program?
-6. Create one graph comparing total instruction count for Alpha and PISA test programs.
-7. Based on this lab, why is instruction mix important when designing a processor?
-
-## Submission
-
-Submit:
-
-- Tables 1, 2, and 3.
-- Answers to the analysis questions.
-- One graph comparing Alpha and PISA total instruction counts.
-- A short conclusion of 100 to 150 words.
-- The simulator output files or pasted output sections used to calculate the table values.
-
-## Report Tip
-
-Do not only report numbers. Explain what the numbers imply. For example, a workload with many loads and stores may be more sensitive to cache and memory hierarchy design, while a workload with many conditional branches may be more sensitive to branch predictor accuracy.
+What can you conclude about the two ISAs from your data and plot? For instance, does one ISA accomplish the same task with fewer instructions?

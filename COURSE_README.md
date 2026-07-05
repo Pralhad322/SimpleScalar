@@ -32,10 +32,10 @@ Start with:
 SimpleScalar/manuals/README.md
 ```
 
-The custom C compilation guide is:
+The custom C compilation lab is:
 
 ```text
-SimpleScalar/manuals/04_compiling_custom_c_for_pisa.md
+SimpleScalar/manuals/06_compiling_custom_c_for_pisa.md
 ```
 
 ## Important Notes

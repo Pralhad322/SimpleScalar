@@ -2,28 +2,34 @@
 
 ## Purpose
 
-This lab prepares students to use SimpleScalar for processor architecture experiments. By the end of the session, students should be able to build the simulator, identify the major simulator tools, switch between Alpha and PISA targets, and run a simple test program.
+This lab prepares students to build and run the SimpleScalar simulators used in the course. Students will verify the repository layout, build the simulators for PISA and Alpha, and run a small test program.
 
-## Learning Outcomes
+## Repository Layout
 
-After completing this lab, students will be able to:
+After cloning the course repository, the repository root itself is the SimpleScalar working directory. If the repository is cloned as `SimpleScalar`, the layout is:
 
-- Explain the role of functional and timing simulation.
-- Identify the difference between Alpha and PISA targets.
-- Build SimpleScalar for a selected target ISA.
-- Run a simulator executable and redirect output to a file.
-- Locate benchmark binaries, inputs, configuration files, and simulator reports.
+```text
+SimpleScalar/
+  benchmarks/
+  config/
+  labs/
+  scripts/
+  SimpleScalar/
+    manuals/
+  tests-alpha/
+  tests-pisa/
+  sim-fast.c
+  sim-safe.c
+  sim-profile.c
+  sim-bpred.c
+  sim-outorder.c
+  sim-singlecycle.c
+  Makefile
+```
 
-## Background
+There is no extra nested `simplesim-3.0/` directory in this repository. Run the commands in these manuals from the cloned repository root unless a lab explicitly says to enter `labs/`.
 
-SimpleScalar is a computer architecture simulation toolset. It can run compiled programs for simulated target machines and report statistics about instruction execution, memory behavior, branch prediction, and pipeline performance.
-
-The two target ISAs used in this course are:
-
-- Alpha: a 64-bit RISC instruction set used for larger benchmark experiments.
-- PISA: a portable MIPS-like instruction set commonly used for teaching experiments.
-
-SimpleScalar includes several simulator executables:
+## Simulator Overview
 
 | Simulator | Purpose |
 | --- | --- |
@@ -33,29 +39,14 @@ SimpleScalar includes several simulator executables:
 | `sim-cache` | Cache hierarchy simulation. |
 | `sim-bpred` | Branch predictor simulation. |
 | `sim-outorder` | Detailed out-of-order processor timing simulation. |
-
-## Required Files
-
-Students need the extracted lab package:
-
-```text
-SimpleScalar/
-  benchmarks/
-  simplesim-3.0/
-```
-
-If the package is still zipped, extract it first:
-
-```bash
-unzip SimpleScalar.zip
-```
+| `sim-singlecycle` | Educational single-cycle timing model added for this course. |
 
 ## Part A: Build for PISA
 
-Open a terminal in the simulator source directory:
+Open a terminal in the cloned repository root:
 
 ```bash
-cd SimpleScalar/simplesim-3.0
+cd /path/to/SimpleScalar
 ```
 
 Clean any old build files:
@@ -70,7 +61,7 @@ Configure for PISA:
 make config-pisa
 ```
 
-Compile the simulator:
+Compile the simulators:
 
 ```bash
 make
@@ -79,7 +70,7 @@ make
 Check that simulator executables were created:
 
 ```bash
-ls sim-fast sim-profile sim-outorder
+ls sim-fast sim-safe sim-profile sim-bpred sim-outorder sim-singlecycle
 ```
 
 Run a quick PISA test:
@@ -121,31 +112,7 @@ Every simulator supports a help option:
 ```bash
 ./sim-profile -h
 ./sim-outorder -h
+./sim-bpred -h
 ```
 
-Students should record one option from `sim-profile -h` and one option from `sim-outorder -h` that they expect to use in later labs.
-
-## Checkpoint Questions
-
-1. What is the difference between functional simulation and timing simulation?
-2. Which simulator is most appropriate for instruction class profiling?
-3. Which simulator is most appropriate for pipeline and superscalar experiments?
-4. Why must the directory be cleaned before switching from one target ISA to another?
-
-## Submission
-
-Submit a short setup report containing:
-
-- The target ISA builds completed.
-- A screenshot or copied terminal output showing one successful PISA run.
-- A screenshot or copied terminal output showing one successful Alpha run.
-- Answers to the checkpoint questions.
-
-## Common Problems
-
-| Problem | Likely cause | Fix |
-| --- | --- | --- |
-| `make: *** No rule to make target` | Wrong directory | Run commands inside `SimpleScalar/simplesim-3.0`. |
-| `command not found: ./sim-safe` | Build did not finish | Run `make` and check for errors. |
-| Program binary does not run | Simulator built for the wrong ISA | Rebuild using `make clean`, then the correct `make config-*` command. |
-| Paths do not match the manual | Different extraction location | Keep the same relative paths from `SimpleScalar/`. |
+Use the help output to confirm the option names used in later labs.
