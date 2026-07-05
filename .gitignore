@@ -16,3 +16,6 @@ labs/*.out
 labs/*.trc
 labs/*.pisa
 labs/hello_toolchain_test.c
+labs/hello_loop.c
+labs/test1.c
+labs/test2.c
