@@ -1,0 +1,78 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\lstset{basicstyle=\ttfamily\small,breaklines=true,columns=fullflexible,frame=single}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.65em}
+\title{SimpleScalar Computer Architecture Lab Experiments}
+\author{Computer Architecture Laboratory}
+\date{}
+\begin{document}
+\maketitle
+This folder contains the student experiment handouts for the SimpleScalar computer architecture lab sequence. Each experiment is provided as a PDF for students and as a LaTeX source file for editing.
+Repository layout after cloning:
+\begin{lstlisting}
+SimpleScalar/
+  benchmarks/
+  config/
+  labs/
+  scripts/
+  SimpleScalar/
+    experiments/
+  tests-alpha/
+  tests-pisa/
+  sim-fast.c
+  sim-safe.c
+  sim-profile.c
+  sim-bpred.c
+  sim-outorder.c
+  sim-singlecycle.c
+  Makefile
+\end{lstlisting}
+There is no nested \texttt{simplesim-3.0/} directory in this repository. Unless a lab explicitly says to enter \texttt{labs/}, run commands from the cloned repository root:
+\begin{lstlisting}
+cd /path/to/SimpleScalar
+\end{lstlisting}
+\section{Suggested Lab Sequence}
+\begin{center}
+\scriptsize
+\begin{longtable}{|p{0.23\linewidth}|p{0.23\linewidth}|p{0.23\linewidth}|p{0.23\linewidth}|}
+\hline
+Lab & Handout & Main topic & Simulator \\
+\hline
+\endfirsthead
+\hline
+Lab & Handout & Main topic & Simulator \\
+\hline
+\endhead
+0 & \texttt{00\_setup\_and\_orientation.pdf} & Setup, build targets, simulator overview & all \\
+\hline
+1 & \texttt{01\_isa\_profiling\_lab.pdf} & Instruction set profiling and Alpha vs PISA comparison & \texttt{sim-profile} \\
+\hline
+2 & \texttt{02\_processor\_design\_lab.pdf} & In-order and out-of-order pipelined processors & \texttt{sim-outorder} \\
+\hline
+2 extension & \texttt{03\_processor\_design\_home\_assignment.pdf} & Superscalar bottleneck and design-space analysis & \texttt{sim-outorder} \\
+\hline
+3 & \texttt{04\_branch\_prediction\_lab.pdf} & Branch predictor accuracy and CPI impact & \texttt{sim-bpred}, \texttt{sim-outorder} \\
+\hline
+4 & \texttt{05\_singlecycle\_processor\_lab.pdf} & Educational single-cycle processor model & \texttt{sim-singlecycle} \\
+\hline
+5 & \texttt{06\_compiling\_custom\_c\_for\_pisa.pdf} & Compile custom C programs for PISA & \texttt{sim-safe}, \texttt{sim-profile} \\
+\hline
+\end{longtable}
+\normalsize
+\end{center}
+\section{Notes}
+\begin{itemize}
+\item Lab 1 uses Alpha and PISA builds. Rebuild with \texttt{make clean} before switching ISA targets.
+\item Labs 2, 4, and 5 use PISA.
+\item Lab 3 uses Alpha benchmarks for branch prediction, matching the original UMass SimpleScalar reference lab.
+\item The local PISA cross compiler is installed under \texttt{toolchain/} by \texttt{scripts/install\_pisa\_cross\_compiler.sh}; it is not committed to the repository.
+\end{itemize}
+\end{document}

@@ -1,139 +1,160 @@
-# Lab 3: Branch Prediction Using SimpleScalar
-
-## Objective
-
-This lab studies the effect of branch prediction schemes on branch address prediction rate and processor CPI/IPC. The lab uses `sim-bpred` for branch predictor statistics and `sim-outorder` for timing impact.
-
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\lstset{basicstyle=\ttfamily\small,breaklines=true,columns=fullflexible,frame=single}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.65em}
+\title{Lab 3: Branch Prediction Using SimpleScalar}
+\author{Computer Architecture Laboratory}
+\date{}
+\begin{document}
+\maketitle
+\section{Objective}
+This lab studies the effect of branch prediction schemes on branch address prediction rate and processor CPI/IPC. The lab uses \texttt{sim-bpred} for branch predictor statistics and \texttt{sim-outorder} for timing impact.
 The structure follows the UMass SimpleScalar branch prediction lab, with paths updated for the current repository layout:
-
-```text
+\begin{lstlisting}
 http://www.ecs.umass.edu/ece/koren/architecture/Simplescalar/branch_prediction.htm
-```
-
+\end{lstlisting}
 Run all commands from the cloned repository root.
-
-```bash
+\begin{lstlisting}
 cd /path/to/SimpleScalar
-```
-
-## Setup
-
+\end{lstlisting}
+\section{Setup}
 Configure for Alpha because this lab uses the Alpha benchmarks from Lab 1:
-
-```bash
+\begin{lstlisting}
 make clean
 make config-alpha
 make
 mkdir -p labs
-```
-
-Get help for `sim-bpred`:
-
-```bash
+\end{lstlisting}
+Get help for \texttt{sim-bpred}:
+\begin{lstlisting}
 ./sim-bpred -h
-```
-
+\end{lstlisting}
 Important predictor option:
-
-```text
+\begin{lstlisting}
 -bpred {nottaken|taken|bimod|2lev|comb}
-```
-
+\end{lstlisting}
 Useful statistics:
-
-| Statistic pattern | Meaning |
-| --- | --- |
-| `bpred_taken.bpred_addr_rate` | Branch address prediction rate for taken predictor. |
-| `bpred_nottaken.bpred_addr_rate` | Branch address prediction rate for not-taken predictor. |
-| `bpred_bimod.bpred_addr_rate` | Branch address prediction rate for bimodal predictor. |
-| `*.bpred_dir_rate` | Branch direction prediction rate. |
-
-## Part 1: Branch Address Prediction Rate
-
+\begin{center}
+\scriptsize
+\begin{longtable}{|p{0.24\linewidth}|p{0.24\linewidth}|}
+\hline
+Statistic pattern & Meaning \\
+\hline
+\endfirsthead
+\hline
+Statistic pattern & Meaning \\
+\hline
+\endhead
+\texttt{bpred\_taken.bpred\_addr\_rate} & Branch address prediction rate for taken predictor. \\
+\hline
+\texttt{bpred\_nottaken.bpred\_addr\_rate} & Branch address prediction rate for not-taken predictor. \\
+\hline
+\texttt{bpred\_bimod.bpred\_addr\_rate} & Branch address prediction rate for bimodal predictor. \\
+\hline
+\texttt{*.bpred\_dir\_rate} & Branch direction prediction rate. \\
+\hline
+\end{longtable}
+\normalsize
+\end{center}
+\section{Part 1: Branch Address Prediction Rate}
 Run each benchmark using three prediction schemes: taken, not taken, and bimodal.
-
-### `anagram.alpha`
-
-```bash
+\subsection{\texttt{anagram.alpha}}
+\begin{lstlisting}
 ./sim-bpred -bpred taken -redir:sim labs/bpred_anagram_taken.out benchmarks/anagram.alpha benchmarks/words < benchmarks/anagram.in
 ./sim-bpred -bpred nottaken -redir:sim labs/bpred_anagram_nottaken.out benchmarks/anagram.alpha benchmarks/words < benchmarks/anagram.in
 ./sim-bpred -bpred bimod -redir:sim labs/bpred_anagram_bimod.out benchmarks/anagram.alpha benchmarks/words < benchmarks/anagram.in
-```
-
-### `go.alpha`
-
-```bash
+\end{lstlisting}
+\subsection{\texttt{go.alpha}}
+\begin{lstlisting}
 ./sim-bpred -bpred taken -redir:sim labs/bpred_go_taken.out benchmarks/go.alpha 50 9 benchmarks/2stone9.in
 ./sim-bpred -bpred nottaken -redir:sim labs/bpred_go_nottaken.out benchmarks/go.alpha 50 9 benchmarks/2stone9.in
 ./sim-bpred -bpred bimod -redir:sim labs/bpred_go_bimod.out benchmarks/go.alpha 50 9 benchmarks/2stone9.in
-```
-
-### `compress95.alpha`
-
-```bash
+\end{lstlisting}
+\subsection{\texttt{compress95.alpha}}
+\begin{lstlisting}
 ./sim-bpred -bpred taken -redir:sim labs/bpred_compress_taken.out benchmarks/compress95.alpha < benchmarks/compress95.in
 ./sim-bpred -bpred nottaken -redir:sim labs/bpred_compress_nottaken.out benchmarks/compress95.alpha < benchmarks/compress95.in
 ./sim-bpred -bpred bimod -redir:sim labs/bpred_compress_bimod.out benchmarks/compress95.alpha < benchmarks/compress95.in
-```
-
-### `cc1.alpha`
-
-```bash
+\end{lstlisting}
+\subsection{\texttt{cc1.alpha}}
+\begin{lstlisting}
 ./sim-bpred -bpred taken -redir:sim labs/bpred_cc1_taken.out benchmarks/cc1.alpha -O benchmarks/1stmt.i
 ./sim-bpred -bpred nottaken -redir:sim labs/bpred_cc1_nottaken.out benchmarks/cc1.alpha -O benchmarks/1stmt.i
 ./sim-bpred -bpred bimod -redir:sim labs/bpred_cc1_bimod.out benchmarks/cc1.alpha -O benchmarks/1stmt.i
-```
-
+\end{lstlisting}
 Extract prediction rates:
-
-```bash
+\begin{lstlisting}
 grep -E "bpred_.*bpred_addr_rate|bpred_.*bpred_dir_rate" labs/bpred_*.out
-```
-
+\end{lstlisting}
 Fill Table 1.
-
-| Benchmark | Taken branch address prediction rate | Not-taken branch address prediction rate | Bimod branch address prediction rate |
-| --- | ---: | ---: | ---: |
-| `anagram.alpha` | | | |
-| `go.alpha` | | | |
-| `compress95.alpha` | | | |
-| `cc1.alpha` | | | |
-
+\begin{center}
+\scriptsize
+\begin{longtable}{|p{0.23\linewidth}|p{0.23\linewidth}|p{0.23\linewidth}|p{0.23\linewidth}|}
+\hline
+Benchmark & Taken branch address prediction rate & Not-taken branch address prediction rate & Bimod branch address prediction rate \\
+\hline
+\endfirsthead
+\hline
+Benchmark & Taken branch address prediction rate & Not-taken branch address prediction rate & Bimod branch address prediction rate \\
+\hline
+\endhead
+\texttt{anagram.alpha} &  &  &  \\
+\hline
+\texttt{go.alpha} &  &  &  \\
+\hline
+\texttt{compress95.alpha} &  &  &  \\
+\hline
+\texttt{cc1.alpha} &  &  &  \\
+\hline
+\end{longtable}
+\normalsize
+\end{center}
 Create a histogram for the four benchmarks and draw a conclusion. Does the result agree with your intuition?
-
-## Part 2: CPI Impact Using `sim-outorder`
-
-Use `sim-outorder` to calculate CPI for two benchmarks. The original lab skips the other two because they can take longer to simulate.
-
+\section{Part 2: CPI Impact Using \texttt{sim-outorder}}
+Use \texttt{sim-outorder} to calculate CPI for two benchmarks. The original lab skips the other two because they can take longer to simulate.
 Run:
-
-```bash
+\begin{lstlisting}
 ./sim-outorder -config config/default.cfg -bpred taken -redir:sim labs/ooo_anagram_taken.out benchmarks/anagram.alpha benchmarks/words < benchmarks/anagram.in
 ./sim-outorder -config config/default.cfg -bpred nottaken -redir:sim labs/ooo_anagram_nottaken.out benchmarks/anagram.alpha benchmarks/words < benchmarks/anagram.in
 ./sim-outorder -config config/default.cfg -bpred bimod -redir:sim labs/ooo_anagram_bimod.out benchmarks/anagram.alpha benchmarks/words < benchmarks/anagram.in
-```
-
-```bash
+\end{lstlisting}
+\begin{lstlisting}
 ./sim-outorder -config config/default.cfg -bpred taken -redir:sim labs/ooo_compress_taken.out benchmarks/compress95.alpha < benchmarks/compress95.in
 ./sim-outorder -config config/default.cfg -bpred nottaken -redir:sim labs/ooo_compress_nottaken.out benchmarks/compress95.alpha < benchmarks/compress95.in
 ./sim-outorder -config config/default.cfg -bpred bimod -redir:sim labs/ooo_compress_bimod.out benchmarks/compress95.alpha < benchmarks/compress95.in
-```
-
+\end{lstlisting}
 Extract CPI and IPC:
-
-```bash
+\begin{lstlisting}
 grep -E "sim_CPI|sim_IPC|sim_num_insn|sim_cycle" labs/ooo_*.out
-```
-
+\end{lstlisting}
 Fill Table 2.
-
-| Benchmark | Taken CPI | Not-taken CPI | Bimod CPI |
-| --- | ---: | ---: | ---: |
-| `anagram.alpha` | | | |
-| `compress95.alpha` | | | |
-
+\begin{center}
+\scriptsize
+\begin{longtable}{|p{0.23\linewidth}|p{0.23\linewidth}|p{0.23\linewidth}|p{0.23\linewidth}|}
+\hline
+Benchmark & Taken CPI & Not-taken CPI & Bimod CPI \\
+\hline
+\endfirsthead
+\hline
+Benchmark & Taken CPI & Not-taken CPI & Bimod CPI \\
+\hline
+\endhead
+\texttt{anagram.alpha} &  &  &  \\
+\hline
+\texttt{compress95.alpha} &  &  &  \\
+\hline
+\end{longtable}
+\normalsize
+\end{center}
 Create a histogram for the two benchmarks and compare the three schemes.
-
-## Bonus
-
+\section{Bonus}
 Write, compile, and run a PISA C program containing a loop that iterates 10 million times. Use the compile-program lab for the compiler setup. Then calculate branch address prediction rate for taken, not-taken, and bimodal predictors.
+\end{document}

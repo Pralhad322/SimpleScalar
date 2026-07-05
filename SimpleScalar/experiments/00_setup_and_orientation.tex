@@ -1,0 +1,120 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\lstset{basicstyle=\ttfamily\small,breaklines=true,columns=fullflexible,frame=single}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.65em}
+\title{Lab 0: SimpleScalar Setup and Orientation}
+\author{Computer Architecture Laboratory}
+\date{}
+\begin{document}
+\maketitle
+\section{Purpose}
+This lab prepares students to build and run the SimpleScalar simulators used in the course. Students will verify the repository layout, build the simulators for PISA and Alpha, and run a small test program.
+\section{Repository Layout}
+After cloning the course repository, the repository root itself is the SimpleScalar working directory. If the repository is cloned as \texttt{SimpleScalar}, the layout is:
+\begin{lstlisting}
+SimpleScalar/
+  benchmarks/
+  config/
+  labs/
+  scripts/
+  SimpleScalar/
+    experiments/
+  tests-alpha/
+  tests-pisa/
+  sim-fast.c
+  sim-safe.c
+  sim-profile.c
+  sim-bpred.c
+  sim-outorder.c
+  sim-singlecycle.c
+  Makefile
+\end{lstlisting}
+There is no extra nested \texttt{simplesim-3.0/} directory in this repository. Run the commands in these manuals from the cloned repository root unless a lab explicitly says to enter \texttt{labs/}.
+\section{Simulator Overview}
+\begin{center}
+\scriptsize
+\begin{longtable}{|p{0.24\linewidth}|p{0.24\linewidth}|}
+\hline
+Simulator & Purpose \\
+\hline
+\endfirsthead
+\hline
+Simulator & Purpose \\
+\hline
+\endhead
+\texttt{sim-fast} & Fast functional simulation with minimal checking. \\
+\hline
+\texttt{sim-safe} & Functional simulation with additional safety checks. \\
+\hline
+\texttt{sim-profile} & Instruction and address profiling. \\
+\hline
+\texttt{sim-cache} & Cache hierarchy simulation. \\
+\hline
+\texttt{sim-bpred} & Branch predictor simulation. \\
+\hline
+\texttt{sim-outorder} & Detailed out-of-order processor timing simulation. \\
+\hline
+\texttt{sim-singlecycle} & Educational single-cycle timing model added for this course. \\
+\hline
+\end{longtable}
+\normalsize
+\end{center}
+\section{Part A: Build for PISA}
+Open a terminal in the cloned repository root:
+\begin{lstlisting}
+cd /path/to/SimpleScalar
+\end{lstlisting}
+Clean any old build files:
+\begin{lstlisting}
+make clean
+\end{lstlisting}
+Configure for PISA:
+\begin{lstlisting}
+make config-pisa
+\end{lstlisting}
+Compile the simulators:
+\begin{lstlisting}
+make
+\end{lstlisting}
+Check that simulator executables were created:
+\begin{lstlisting}
+ls sim-fast sim-safe sim-profile sim-bpred sim-outorder sim-singlecycle
+\end{lstlisting}
+Run a quick PISA test:
+\begin{lstlisting}
+./sim-safe tests-pisa/bin.little/test-math
+\end{lstlisting}
+\section{Part B: Build for Alpha}
+Clean the previous build:
+\begin{lstlisting}
+make clean
+\end{lstlisting}
+Configure for Alpha:
+\begin{lstlisting}
+make config-alpha
+\end{lstlisting}
+Compile again:
+\begin{lstlisting}
+make
+\end{lstlisting}
+Run a quick Alpha test:
+\begin{lstlisting}
+./sim-safe tests-alpha/bin/test-math
+\end{lstlisting}
+\section{Part C: Getting Help From a Simulator}
+Every simulator supports a help option:
+\begin{lstlisting}
+./sim-profile -h
+./sim-outorder -h
+./sim-bpred -h
+\end{lstlisting}
+Use the help output to confirm the option names used in later labs.
+\end{document}

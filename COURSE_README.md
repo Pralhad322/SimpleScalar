@@ -24,18 +24,18 @@ If the required Ubuntu/Debian build packages are already installed:
 bash scripts/install_pisa_cross_compiler.sh
 ```
 
-## Manuals
+## Experiments
 
 Start with:
 
 ```text
-SimpleScalar/manuals/README.md
+SimpleScalar/experiments/README.pdf
 ```
 
 The custom C compilation lab is:
 
 ```text
-SimpleScalar/manuals/06_compiling_custom_c_for_pisa.md
+SimpleScalar/experiments/06_compiling_custom_c_for_pisa.pdf
 ```
 
 ## Important Notes

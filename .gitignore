@@ -19,3 +19,7 @@ labs/hello_toolchain_test.c
 labs/hello_loop.c
 labs/test1.c
 labs/test2.c
+SimpleScalar/experiments/*.aux
+SimpleScalar/experiments/*.log
+SimpleScalar/experiments/*.out
+SimpleScalar/experiments/*.toc

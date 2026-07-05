@@ -1,0 +1,156 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\lstset{basicstyle=\ttfamily\small,breaklines=true,columns=fullflexible,frame=single}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.65em}
+\title{Lab 2: Pipelining and Superscalar Concepts With SimpleScalar}
+\author{Computer Architecture Laboratory}
+\date{}
+\begin{document}
+\maketitle
+\section{Objective}
+In this lab, students use \texttt{sim-outorder} to explore pipelined and superscalar processor architectures. Students configure and simulate in-order and out-of-order processor models, compare IPC, and use a pipeline trace to reason about data forwarding.
+All commands are written for the current repository layout. Run setup commands from the cloned repository root.
+\begin{lstlisting}
+cd /path/to/SimpleScalar
+\end{lstlisting}
+\section{Background: The \texttt{sim-outorder} Simulator}
+\texttt{sim-outorder} is a detailed microarchitectural timing simulator. It models branch prediction, caches, out-of-order execution, functional units, an instruction window, a load-store queue, and in-order commit.
+Get help for the simulator:
+\begin{lstlisting}
+./sim-outorder -h
+\end{lstlisting}
+\section{Setup}
+Use the PISA build for this lab:
+\begin{lstlisting}
+make clean
+make config-pisa
+make
+\end{lstlisting}
+Create a workspace:
+\begin{lstlisting}
+mkdir -p labs
+\end{lstlisting}
+Copy the default configuration and the test program:
+\begin{lstlisting}
+cp config/default.cfg labs/
+cp tests-pisa/bin.little/test-math labs/
+\end{lstlisting}
+\section{Part 1: In-Order Pipelined Processor}
+\subsection{Procedure}
+Create \texttt{config\_a.cfg}:
+\begin{lstlisting}
+cp labs/default.cfg labs/config_a.cfg
+\end{lstlisting}
+Open \texttt{labs/config\_a.cfg} in a text editor and set:
+\begin{lstlisting}
+-decode:width 1
+-fetch:ifqsize 1
+-lsq:size 8
+-ruu:size 8
+-issue:width 1
+-issue:inorder true
+-res:ialu 1
+-res:imult 1
+-res:memport 1
+-res:fpalu 1
+-res:fpmult 1
+\end{lstlisting}
+Meaning of the parameters:
+\begin{center}
+\scriptsize
+\begin{longtable}{|p{0.24\linewidth}|p{0.24\linewidth}|}
+\hline
+Parameter & Meaning \\
+\hline
+\endfirsthead
+\hline
+Parameter & Meaning \\
+\hline
+\endhead
+\texttt{-decode:width} & Number of instructions decoded per cycle. \\
+\hline
+\texttt{-fetch:ifqsize} & Instruction fetch queue size. \\
+\hline
+\texttt{-lsq:size} & Number of memory operations that can be active at once. \\
+\hline
+\texttt{-ruu:size} & Register update unit size; the main instruction window. \\
+\hline
+\texttt{-issue:width} & Number of instructions that can be issued per cycle. \\
+\hline
+\texttt{-issue:inorder} & Forces program-order issue when set to \texttt{true}. \\
+\hline
+\texttt{-res:ialu} & Number of integer ALUs. \\
+\hline
+\texttt{-res:imult} & Number of integer multiply/divide units. \\
+\hline
+\texttt{-res:memport} & Number of memory ports. \\
+\hline
+\texttt{-res:fpalu} & Number of floating-point ALUs. \\
+\hline
+\texttt{-res:fpmult} & Number of floating-point multiply/divide units. \\
+\hline
+\end{longtable}
+\normalsize
+\end{center}
+Run the simulation:
+\begin{lstlisting}
+cd labs
+../sim-outorder -config config_a.cfg -ptrace config_a.trc 0:1024 -redir:sim sim_configa.out ./test-math
+\end{lstlisting}
+View the IPC:
+\begin{lstlisting}
+grep sim_IPC sim_configa.out
+\end{lstlisting}
+View the pipeline trace:
+\begin{lstlisting}
+../pipeview.pl config_a.trc | less
+\end{lstlisting}
+\subsection{Questions for Part 1}
+\begin{enumerate}
+\item Based on the settings in \texttt{config\_a.cfg}, describe the processor architecture.
+\item What is the final value of \texttt{sim\_IPC}?
+\item Is data forwarding implemented? To answer, examine the pipeline trace for a RAW hazard. Look for a sequence like:
+\end{enumerate}
+\begin{lstlisting}
+ag: sll  r2,r16,2
+ah: addu r3,r3,r2
+\end{lstlisting}
+Can you find a cycle where \texttt{addu} is in the Execute stage while \texttt{sll} is in the Write-Back stage?
+\section{Part 2: Out-of-Order Superscalar Processor}
+\subsection{Procedure}
+Make sure you are in the \texttt{labs/} directory:
+\begin{lstlisting}
+cd /path/to/SimpleScalar/labs
+\end{lstlisting}
+Create \texttt{config\_b.cfg}:
+\begin{lstlisting}
+cp config_a.cfg config_b.cfg
+\end{lstlisting}
+Open \texttt{config\_b.cfg} and apply the same modifications as Part 1, with one exception:
+\begin{lstlisting}
+-issue:inorder false
+\end{lstlisting}
+Run the simulation:
+\begin{lstlisting}
+../sim-outorder -config config_b.cfg -redir:sim sim_configb.out ./test-math
+\end{lstlisting}
+View the IPC:
+\begin{lstlisting}
+grep sim_IPC sim_configb.out
+\end{lstlisting}
+\subsection{Questions for Part 2}
+\begin{enumerate}
+\item Describe the new configuration. What is the key difference compared with Part 1?
+\item What is the \texttt{sim\_IPC} for this configuration?
+\item Compare the IPC from Part 1 and Part 2. What does this tell you about the benefit of out-of-order execution for this workload?
+\item In an out-of-order processor, the Commit stage ensures results are written back in program order. Why is in-order commit necessary?
+\end{enumerate}
+\end{document}

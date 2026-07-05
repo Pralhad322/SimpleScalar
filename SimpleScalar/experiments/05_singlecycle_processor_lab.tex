@@ -1,0 +1,75 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\lstset{basicstyle=\ttfamily\small,breaklines=true,columns=fullflexible,frame=single}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.65em}
+\title{Lab 4: Educational Single-Cycle Processor Model}
+\author{Computer Architecture Laboratory}
+\date{}
+\begin{document}
+\maketitle
+\section{Objective}
+This lab uses the course simulator \texttt{sim-singlecycle} to demonstrate a single-cycle execution model. The simulator executes instructions functionally like \texttt{sim-safe}, but it charges exactly one simulated cycle per committed instruction.
+Important relationship:
+\begin{lstlisting}
+CPI = total cycles / total instructions
+\end{lstlisting}
+For this educational single-cycle model:
+\begin{lstlisting}
+sim_cycle = sim_num_insn
+sim_CPI = 1.0000
+\end{lstlisting}
+\section{Setup}
+Run from the cloned repository root:
+\begin{lstlisting}
+cd /path/to/SimpleScalar
+make clean
+make config-pisa
+make
+mkdir -p labs
+cp tests-pisa/bin.little/test-math labs/
+\end{lstlisting}
+Confirm that \texttt{sim-singlecycle} exists:
+\begin{lstlisting}
+ls sim-singlecycle
+\end{lstlisting}
+\section{Part 1: Run the Single-Cycle Simulator}
+Run:
+\begin{lstlisting}
+./sim-singlecycle -redir:sim labs/test_math_singlecycle.out labs/test-math
+\end{lstlisting}
+Extract the main statistics:
+\begin{lstlisting}
+grep -E "sim_num_insn|sim_cycle|sim_IPC|sim_CPI" labs/test_math_singlecycle.out
+\end{lstlisting}
+Record:
+\begin{center}
+\scriptsize
+\begin{longtable}{|p{0.18\linewidth}|p{0.18\linewidth}|p{0.18\linewidth}|p{0.18\linewidth}|p{0.18\linewidth}|}
+\hline
+Program & Instructions & Cycles & IPC & CPI \\
+\hline
+\endfirsthead
+\hline
+Program & Instructions & Cycles & IPC & CPI \\
+\hline
+\endhead
+\texttt{test-math} &  &  &  &  \\
+\hline
+\end{longtable}
+\normalsize
+\end{center}
+\section{Part 2: Explain the Result}
+Answer:
+\begin{enumerate}
+\item Why is \texttt{sim\_CPI} equal to 1.0000?
+\item Why is \texttt{sim\_cycle} equal to \texttt{sim\_num\_insn}?
+\end{enumerate}
+\end{document}
