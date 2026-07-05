@@ -8,4 +8,11 @@ sim-fast
 sim-outorder
 sim-profile
 sim-safe
+sim-singlecycle
 sysprobe
+toolchain/
+benchmarks (1)/
+labs/*.out
+labs/*.trc
+labs/*.pisa
+labs/hello_toolchain_test.c

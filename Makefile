@@ -279,7 +279,7 @@ CFLAGS = $(MFLAGS) $(FFLAGS) $(OFLAGS) $(BINUTILS_INC) $(BINUTILS_LIB)
 #
 # all the sources
 #
-SRCS =	main.c sim-fast.c sim-safe.c sim-cache.c sim-profile.c \
+SRCS =	main.c sim-fast.c sim-safe.c sim-singlecycle.c sim-cache.c sim-profile.c \
 	sim-eio.c sim-bpred.c sim-cheetah.c sim-outorder.c \
 	memory.c regs.c cache.c bpred.c ptrace.c eventq.c \
 	resource.c endian.c dlite.c symbol.c eval.c options.c range.c \
@@ -307,7 +307,7 @@ OBJS =	main.$(OEXT) syscall.$(OEXT) memory.$(OEXT) regs.$(OEXT) \
 #
 # programs to build
 #
-PROGS = sim-fast$(EEXT) sim-safe$(EEXT) sim-eio$(EEXT) \
+PROGS = sim-fast$(EEXT) sim-safe$(EEXT) sim-singlecycle$(EEXT) sim-eio$(EEXT) \
 	sim-bpred$(EEXT) sim-profile$(EEXT) \
 	sim-cache$(EEXT) sim-outorder$(EEXT) # sim-cheetah$(EEXT)
 
@@ -376,6 +376,9 @@ sim-fast$(EEXT):	sysprobe$(EEXT) sim-fast.$(OEXT) $(OBJS) libexo/libexo.$(LEXT)
 
 sim-safe$(EEXT):	sysprobe$(EEXT) sim-safe.$(OEXT) $(OBJS) libexo/libexo.$(LEXT)
 	$(CC) -o sim-safe$(EEXT) $(CFLAGS) sim-safe.$(OEXT) $(OBJS) libexo/libexo.$(LEXT) $(MLIBS)
+
+sim-singlecycle$(EEXT):	sysprobe$(EEXT) sim-singlecycle.$(OEXT) $(OBJS) libexo/libexo.$(LEXT)
+	$(CC) -o sim-singlecycle$(EEXT) $(CFLAGS) sim-singlecycle.$(OEXT) $(OBJS) libexo/libexo.$(LEXT) $(MLIBS)
 
 sim-profile$(EEXT):	sysprobe$(EEXT) sim-profile.$(OEXT) $(OBJS) libexo/libexo.$(LEXT)
 	$(CC) -o sim-profile$(EEXT) $(CFLAGS) sim-profile.$(OEXT) $(OBJS) libexo/libexo.$(LEXT) $(MLIBS)
@@ -476,6 +479,8 @@ sim-fast.$(OEXT): host.h misc.h machine.h machine.def regs.h memory.h
 sim-fast.$(OEXT): options.h stats.h eval.h loader.h syscall.h dlite.h sim.h
 sim-safe.$(OEXT): host.h misc.h machine.h machine.def regs.h memory.h
 sim-safe.$(OEXT): options.h stats.h eval.h loader.h syscall.h dlite.h sim.h
+sim-singlecycle.$(OEXT): host.h misc.h machine.h machine.def regs.h memory.h
+sim-singlecycle.$(OEXT): options.h stats.h eval.h loader.h syscall.h dlite.h sim.h
 sim-cache.$(OEXT): host.h misc.h machine.h machine.def regs.h memory.h
 sim-cache.$(OEXT): options.h stats.h eval.h cache.h loader.h syscall.h
 sim-cache.$(OEXT): dlite.h sim.h
