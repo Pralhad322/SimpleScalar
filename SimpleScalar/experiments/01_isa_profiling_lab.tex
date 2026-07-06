@@ -3,13 +3,21 @@
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage{array}
-\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{ragged2e}
+\usepackage{tabularx}
 \usepackage{hyperref}
 \usepackage{xcolor}
 \usepackage{listings}
 \lstset{basicstyle=\ttfamily\small,breaklines=true,columns=fullflexible,frame=single}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0.65em}
+\newcolumntype{L}{>{\RaggedRight\arraybackslash}X}
+\newcommand{\profiletableheader}{%
+Benchmark & Total insts & Load & Store & \shortstack{Uncond.\\branch} &
+\shortstack{Cond.\\branch} & \shortstack{Integer\\compute} &
+\shortstack{Floating pt.\\compute} \\
+}
 \title{Lab 1: ISA Profiling}
 \author{Computer Architecture Laboratory}
 \date{}
@@ -52,28 +60,26 @@ Execute the following commands. After each run, find \texttt{sim\_num\_insn} and
 In the current repository, \texttt{benchmarks/} is directly under the repository root.
 \subsection{Step 3: Data Collection and Analysis}
 Record your results in Table 1.
-\begin{center}
-\scriptsize
-\begin{longtable}{|p{0.12\linewidth}|p{0.12\linewidth}|p{0.12\linewidth}|p{0.12\linewidth}|p{0.12\linewidth}|p{0.12\linewidth}|p{0.12\linewidth}|p{0.12\linewidth}|}
-\hline
-Benchmark & Total Insts & Load \% & Store \% & Uncond. Branch \% & Cond. Branch \% & Integer Compute \% & Floating Pt. Compute \% \\
-\hline
-\endfirsthead
-\hline
-Benchmark & Total Insts & Load \% & Store \% & Uncond. Branch \% & Cond. Branch \% & Integer Compute \% & Floating Pt. Compute \% \\
-\hline
-\endhead
+\begin{table}[htbp]
+\centering
+\caption{Instruction class profile for Alpha benchmark programs}
+\label{tab:alpha-benchmarks}
+\small
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.18}
+\begin{tabularx}{\textwidth}{@{}L r c c c c c c@{}}
+\toprule
+\profiletableheader
+\midrule
 \texttt{anagram.alpha} &  &  &  &  &  &  &  \\
-\hline
 \texttt{go.alpha} &  &  &  &  &  &  &  \\
-\hline
 \texttt{compress95.alpha} &  &  &  &  &  &  &  \\
-\hline
 \texttt{cc1.alpha} &  &  &  &  &  &  &  \\
-\hline
-\end{longtable}
-\normalsize
-\end{center}
+\bottomrule
+\end{tabularx}
+\vspace{0.25em}
+\footnotesize All instruction-class values except total instructions are percentages.
+\end{table}
 Answer these questions for each benchmark:
 \begin{enumerate}
 \item Is the benchmark memory intensive or computation intensive?
@@ -102,28 +108,26 @@ Run:
 ./sim-profile -iclass tests-alpha/bin/test-printf
 \end{lstlisting}
 Record the results in Table 2.
-\begin{center}
-\scriptsize
-\begin{longtable}{|p{0.12\linewidth}|p{0.12\linewidth}|p{0.12\linewidth}|p{0.12\linewidth}|p{0.12\linewidth}|p{0.12\linewidth}|p{0.12\linewidth}|p{0.12\linewidth}|}
-\hline
-Benchmark & Total Insts & Load \% & Store \% & Uncond. Branch \% & Cond. Branch \% & Integer Compute \% & Floating Pt. Compute \% \\
-\hline
-\endfirsthead
-\hline
-Benchmark & Total Insts & Load \% & Store \% & Uncond. Branch \% & Cond. Branch \% & Integer Compute \% & Floating Pt. Compute \% \\
-\hline
-\endhead
+\begin{table}[htbp]
+\centering
+\caption{Instruction class profile for Alpha test programs}
+\label{tab:alpha-tests}
+\small
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.18}
+\begin{tabularx}{\textwidth}{@{}L r c c c c c c@{}}
+\toprule
+\profiletableheader
+\midrule
 \texttt{test-math} &  &  &  &  &  &  &  \\
-\hline
 \texttt{test-fmath} &  &  &  &  &  &  &  \\
-\hline
 \texttt{test-llong} &  &  &  &  &  &  &  \\
-\hline
 \texttt{test-printf} &  &  &  &  &  &  &  \\
-\hline
-\end{longtable}
-\normalsize
-\end{center}
+\bottomrule
+\end{tabularx}
+\vspace{0.25em}
+\footnotesize All instruction-class values except total instructions are percentages.
+\end{table}
 \subsection{Section B: Run PISA Test Programs}
 Reconfigure for PISA:
 \begin{lstlisting}
@@ -139,28 +143,26 @@ Run:
 ./sim-profile -iclass tests-pisa/bin.little/test-printf
 \end{lstlisting}
 Record the results in Table 3.
-\begin{center}
-\scriptsize
-\begin{longtable}{|p{0.12\linewidth}|p{0.12\linewidth}|p{0.12\linewidth}|p{0.12\linewidth}|p{0.12\linewidth}|p{0.12\linewidth}|p{0.12\linewidth}|p{0.12\linewidth}|}
-\hline
-Benchmark & Total Insts & Load \% & Store \% & Uncond. Branch \% & Cond. Branch \% & Integer Compute \% & Floating Pt. Compute \% \\
-\hline
-\endfirsthead
-\hline
-Benchmark & Total Insts & Load \% & Store \% & Uncond. Branch \% & Cond. Branch \% & Integer Compute \% & Floating Pt. Compute \% \\
-\hline
-\endhead
+\begin{table}[htbp]
+\centering
+\caption{Instruction class profile for PISA test programs}
+\label{tab:pisa-tests}
+\small
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.18}
+\begin{tabularx}{\textwidth}{@{}L r c c c c c c@{}}
+\toprule
+\profiletableheader
+\midrule
 \texttt{test-math} &  &  &  &  &  &  &  \\
-\hline
 \texttt{test-fmath} &  &  &  &  &  &  &  \\
-\hline
 \texttt{test-llong} &  &  &  &  &  &  &  \\
-\hline
 \texttt{test-printf} &  &  &  &  &  &  &  \\
-\hline
-\end{longtable}
-\normalsize
-\end{center}
+\bottomrule
+\end{tabularx}
+\vspace{0.25em}
+\footnotesize All instruction-class values except total instructions are percentages.
+\end{table}
 \section{Final Analysis}
 Compare the Alpha and PISA results. Create a histogram using MATLAB, Excel, Python, or another tool comparing a key metric, such as total instruction count for each test program across the two ISAs.
 What can you conclude about the two ISAs from your data and plot? For instance, does one ISA accomplish the same task with fewer instructions?
