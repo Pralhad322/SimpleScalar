@@ -205,28 +205,15 @@ grep -E "sim_num_insn|sim_elapsed_time" labs/o2_o3_diff_O2_safe.out
 grep -E "sim_num_insn|sim_elapsed_time" labs/o2_o3_diff_O3_safe.out
 ```
 
-Run instruction profiling:
-```bash
-./sim-profile -iclass -redir:sim labs/o2_o3_diff_O2_profile.out labs/o2_o3_diff_O2.pisa
-./sim-profile -iclass -redir:sim labs/o2_o3_diff_O3_profile.out labs/o2_o3_diff_O3.pisa
-```
-
-Check instruction class percentages:
-```bash
-grep -E "load|store|uncond branch|cond branch|int computation|fp computation" labs/o2_o3_diff_O2_profile.out
-grep -E "load|store|uncond branch|cond branch|int computation|fp computation" labs/o2_o3_diff_O3_profile.out
-```
-
 Fill Table 4.
 **Table: Comparison of `-O2` and `-O3` on `o2_o3_diff.c`**
 
-| Version | Program output | Total instructions | Total elapsed time | Unconditional branch count |
-| --- | --- | --- | --- | --- |
-| `-O2` |  |  |  |  |
-| `-O3` |  |  |  |  |
+| Version | Total instructions | Total elapsed time |
+| --- | --- | --- |
+| `-O2` |  |  |
+| `-O3` |  |  |
 
 Questions:
 1. Which optimization level executes fewer instructions?
-1. Which optimization level has fewer unconditional branches?
 1. Why does reducing function-call overhead reduce the dynamic instruction count?
 1. Why must the program output be checked before comparing performance?
