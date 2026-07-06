@@ -30,14 +30,12 @@ Start with:
 
 ```text
 SimpleScalar/experiments/README.md
-SimpleScalar/experiments/README.pdf
 ```
 
 The custom C compilation lab is:
 
 ```text
 SimpleScalar/experiments/06_compiling_custom_c_for_pisa.md
-SimpleScalar/experiments/06_compiling_custom_c_for_pisa.pdf
 ```
 
 ## Important Notes
@@ -45,4 +43,5 @@ SimpleScalar/experiments/06_compiling_custom_c_for_pisa.pdf
 - The repository is configured for PISA little-endian experiments.
 - Do not use a generic `mips-linux-gnu-gcc` for SimpleScalar PISA programs.
 - The local cross compiler is installed under `toolchain/`, which is intentionally not committed.
+- Experiment PDFs and LaTeX sources are instructor-local files and are intentionally not committed.
 - Generated simulator outputs under `labs/*.out`, `labs/*.trc`, and `labs/*.pisa` are intentionally ignored.

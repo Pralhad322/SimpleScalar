@@ -1,6 +1,6 @@
 # SimpleScalar Computer Architecture Lab Experiments
 
-This folder contains the student experiment handouts for the SimpleScalar computer architecture lab sequence. Each experiment is provided as a PDF for printing, a Markdown file for copying commands, and a LaTeX source file for editing.
+This folder contains the student experiment handouts for the SimpleScalar computer architecture lab sequence. The GitHub repository provides Markdown files so students can easily copy and paste commands. PDF and LaTeX versions are kept as instructor-local files.
 Repository layout after cloning:
 ```bash
 SimpleScalar/
@@ -28,16 +28,13 @@ cd /path/to/SimpleScalar
 
 ## Suggested Lab Sequence
 
-- Lab 0: setup, build targets, and simulator overview. Files: `00_setup_and_orientation.pdf`, `00_setup_and_orientation.md`. Simulator: all.
-- Lab 1: instruction set profiling and Alpha vs PISA comparison. Files: `01_isa_profiling_lab.pdf`, `01_isa_profiling_lab.md`. Simulator: `sim-profile`.
-- Lab 2: in-order and out-of-order pipelined processors. Files: `02_processor_design_lab.pdf`, `02_processor_design_lab.md`. Simulator: `sim-outorder`.
-- Lab 2 extension: superscalar bottleneck and design-space analysis.
-Files: `03_processor_design_home_assignment.pdf`
-`03_processor_design_home_assignment.md`
-Simulator: `sim-outorder`.
-- Lab 3: branch predictor accuracy and CPI impact. Files: `04_branch_prediction_lab.pdf`, `04_branch_prediction_lab.md`. Simulators: `sim-bpred`, `sim-outorder`.
-- Lab 4: educational single-cycle processor model. Files: `05_singlecycle_processor_lab.pdf`, `05_singlecycle_processor_lab.md`. Simulator: `sim-singlecycle`.
-- Lab 5: compile custom C programs for PISA. Files: `06_compiling_custom_c_for_pisa.pdf`, `06_compiling_custom_c_for_pisa.md`. Simulators: `sim-safe`, `sim-profile`.
+- Lab 0: setup, build targets, and simulator overview. File: `00_setup_and_orientation.md`. Simulator: all.
+- Lab 1: instruction set profiling and Alpha vs PISA comparison. File: `01_isa_profiling_lab.md`. Simulator: `sim-profile`.
+- Lab 2: in-order and out-of-order pipelined processors. File: `02_processor_design_lab.md`. Simulator: `sim-outorder`.
+- Lab 2 extension: superscalar bottleneck and design-space analysis. File: `03_processor_design_home_assignment.md`. Simulator: `sim-outorder`.
+- Lab 3: branch predictor accuracy and CPI impact. File: `04_branch_prediction_lab.md`. Simulators: `sim-bpred`, `sim-outorder`.
+- Lab 4: educational single-cycle processor model. File: `05_singlecycle_processor_lab.md`. Simulator: `sim-singlecycle`.
+- Lab 5: compile custom C programs for PISA. File: `06_compiling_custom_c_for_pisa.md`. Simulators: `sim-safe`, `sim-profile`.
 
 ## Notes
 

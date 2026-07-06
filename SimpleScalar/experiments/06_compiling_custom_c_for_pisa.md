@@ -29,7 +29,7 @@ toolchain/sslittle-na-sstrix/bin/gcc
 Do not use a generic `mips-linux-gnu-gcc`; it normally produces incompatible Linux ELF binaries instead of SimpleScalar PISA ECOFF/SSTrix binaries.
 ## Provided Source Programs
 
-All C programs used in this lab are included in the repository. Students should compile these files directly instead of copying program text from the PDF:
+All C programs used in this lab are included in the repository. Students should compile these files directly instead of copying program text from a handout:
 ```bash
 labs/hello_loop.c
 labs/test1.c
