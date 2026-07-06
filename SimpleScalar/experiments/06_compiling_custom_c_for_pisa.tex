@@ -3,13 +3,16 @@
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage{array}
-\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{ragged2e}
+\usepackage{tabularx}
 \usepackage{hyperref}
 \usepackage{xcolor}
 \usepackage{listings}
 \lstset{basicstyle=\ttfamily\small,breaklines=true,columns=fullflexible,frame=single}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0.65em}
+\newcolumntype{L}{>{\RaggedRight\arraybackslash}X}
 \title{Lab 5: Compiling C Programs for SimpleScalar PISA}
 \author{Computer Architecture Laboratory}
 \date{}
@@ -20,7 +23,7 @@ This lab shows how to write C programs, compile them for the SimpleScalar PISA l
 \begin{lstlisting}
 http://www.ecs.umass.edu/ece/koren/architecture/Simplescalar/bonuslab1.htm
 \end{lstlisting}
-The current repository uses a local installer script instead of the older manual \texttt{sslittle-na-sstrix-gcc} installation process.
+The current repository uses a local installer script instead of the older manual compiler installation process.
 \section{Part 1: Install the Local PISA Compiler}
 Run from the cloned repository root:
 \begin{lstlisting}
@@ -36,23 +39,20 @@ The compiler is installed locally:
 toolchain/sslittle-na-sstrix/bin/gcc
 \end{lstlisting}
 Do not use a generic \texttt{mips-linux-gnu-gcc}; it normally produces incompatible Linux ELF binaries instead of SimpleScalar PISA ECOFF/SSTrix binaries.
-\section{Part 2: Hello Program With a Long Loop}
-Create \texttt{labs/hello\_loop.c}:
+\section{Provided Source Programs}
+All C programs used in this lab are included in the repository. Students should compile these files directly instead of copying program text from the PDF:
 \begin{lstlisting}
-#include <stdio.h>
-
-int
-main(void)
-{
-  int i;
-
-  for (i = 0; i < 10000000; i++)
-    ;
-
-  printf("hello world\n");
-  return 0;
-}
+labs/hello_loop.c
+labs/test1.c
+labs/test2.c
+labs/o2_o3_diff.c
 \end{lstlisting}
+To inspect a program before compiling it:
+\begin{lstlisting}
+less labs/hello_loop.c
+\end{lstlisting}
+\section{Part 2: Hello Program With a Long Loop}
+Use the provided source file \texttt{labs/hello\_loop.c}. This program runs a long empty loop and then prints a message.
 Compile without optimization:
 \begin{lstlisting}
 toolchain/sslittle-na-sstrix/bin/gcc -static -o labs/hello_noopt.pisa labs/hello_loop.c
@@ -84,26 +84,23 @@ Extract instruction count and elapsed simulator time:
 grep -E "sim_num_insn|sim_elapsed_time" labs/hello_*_sim.out
 \end{lstlisting}
 Fill Table 1.
-\begin{center}
-\scriptsize
-\begin{longtable}{|p{0.24\linewidth}|p{0.24\linewidth}|p{0.24\linewidth}|}
-\hline
+\begin{table}[htbp]
+\centering
+\caption{Optimization results for \texttt{hello\_loop.c}}
+\label{tab:hello-loop-results}
+\small
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.18}
+\begin{tabularx}{\textwidth}{@{}L c c@{}}
+\toprule
 Hello program & Total instructions & Total elapsed time \\
-\hline
-\endfirsthead
-\hline
-Hello program & Total instructions & Total elapsed time \\
-\hline
-\endhead
+\midrule
 No optimization &  &  \\
-\hline
 \texttt{-O2} &  &  \\
-\hline
 \texttt{-O3} &  &  \\
-\hline
-\end{longtable}
-\normalsize
-\end{center}
+\bottomrule
+\end{tabularx}
+\end{table}
 Questions:
 \begin{enumerate}
 \item Did you observe a difference between no optimization and \texttt{-O2}?
@@ -113,24 +110,7 @@ Questions:
 \item Plot a histogram comparing the optimization levels.
 \end{enumerate}
 \section{Part 3: Integer Arithmetic Benchmark}
-Create \texttt{labs/test1.c}:
-\begin{lstlisting}
-#include <stdio.h>
-
-int
-main(void)
-{
-  int i;
-  int a = 0;
-  int b = 2, c = 3, d = 10, e = 5, f = 8;
-
-  for (i = 0; i < 10000000; i++)
-    a = b + c * d / e - f;
-
-  printf("a = %d\n", a);
-  return 0;
-}
-\end{lstlisting}
+Use the provided source file \texttt{labs/test1.c}. This program repeats a simple integer arithmetic expression inside a loop.
 Compile:
 \begin{lstlisting}
 toolchain/sslittle-na-sstrix/bin/gcc -static -o labs/test1_noopt.pisa labs/test1.c
@@ -150,45 +130,26 @@ Run with \texttt{sim-profile}:
 ./sim-profile -iclass -redir:sim labs/test1_O3_profile.out labs/test1_O3.pisa
 \end{lstlisting}
 Fill Table 2 using \texttt{sim\_num\_insn}, \texttt{sim\_elapsed\_time}, and the instruction class profile.
-\begin{center}
-\scriptsize
-\begin{longtable}{|p{0.18\linewidth}|p{0.18\linewidth}|p{0.18\linewidth}|p{0.18\linewidth}|p{0.18\linewidth}|}
-\hline
-Test1 & Total instructions & Total elapsed time & Integer operations \% & Floating operations \% \\
-\hline
-\endfirsthead
-\hline
-Test1 & Total instructions & Total elapsed time & Integer operations \% & Floating operations \% \\
-\hline
-\endhead
+\begin{table}[htbp]
+\centering
+\caption{Optimization results for the integer arithmetic benchmark}
+\label{tab:test1-results}
+\small
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.18}
+\begin{tabularx}{\textwidth}{@{}L c c c c@{}}
+\toprule
+Test1 & \shortstack{Total\\instructions} & \shortstack{Total elapsed\\time} &
+\shortstack{Integer\\operations \%} & \shortstack{Floating\\operations \%} \\
+\midrule
 No optimization &  &  &  &  \\
-\hline
 \texttt{-O2} &  &  &  &  \\
-\hline
 \texttt{-O3} &  &  &  &  \\
-\hline
-\end{longtable}
-\normalsize
-\end{center}
+\bottomrule
+\end{tabularx}
+\end{table}
 \section{Part 4: Floating-Point Arithmetic Benchmark}
-Create \texttt{labs/test2.c} by changing the arithmetic variables in \texttt{test1.c} from \texttt{int} to \texttt{float}:
-\begin{lstlisting}
-#include <stdio.h>
-
-int
-main(void)
-{
-  int i;
-  float a = 0.0f;
-  float b = 2.0f, c = 3.0f, d = 10.0f, e = 5.0f, f = 8.0f;
-
-  for (i = 0; i < 10000000; i++)
-    a = b + c * d / e - f;
-
-  printf("a = %f\n", a);
-  return 0;
-}
-\end{lstlisting}
+Use the provided source file \texttt{labs/test2.c}. This program is similar to \texttt{test1.c}, but the arithmetic variables are floating-point values.
 Compile:
 \begin{lstlisting}
 toolchain/sslittle-na-sstrix/bin/gcc -static -o labs/test2_noopt.pisa labs/test2.c
@@ -208,26 +169,24 @@ Run with \texttt{sim-profile}:
 ./sim-profile -iclass -redir:sim labs/test2_O3_profile.out labs/test2_O3.pisa
 \end{lstlisting}
 Fill Table 3.
-\begin{center}
-\scriptsize
-\begin{longtable}{|p{0.18\linewidth}|p{0.18\linewidth}|p{0.18\linewidth}|p{0.18\linewidth}|p{0.18\linewidth}|}
-\hline
-Test2 & Total instructions & Total elapsed time & Floating operations \% & Integer operations \% \\
-\hline
-\endfirsthead
-\hline
-Test2 & Total instructions & Total elapsed time & Floating operations \% & Integer operations \% \\
-\hline
-\endhead
+\begin{table}[htbp]
+\centering
+\caption{Optimization results for the floating-point arithmetic benchmark}
+\label{tab:test2-results}
+\small
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.18}
+\begin{tabularx}{\textwidth}{@{}L c c c c@{}}
+\toprule
+Test2 & \shortstack{Total\\instructions} & \shortstack{Total elapsed\\time} &
+\shortstack{Floating\\operations \%} & \shortstack{Integer\\operations \%} \\
+\midrule
 No optimization &  &  &  &  \\
-\hline
 \texttt{-O2} &  &  &  &  \\
-\hline
 \texttt{-O3} &  &  &  &  \\
-\hline
-\end{longtable}
-\normalsize
-\end{center}
+\bottomrule
+\end{tabularx}
+\end{table}
 Questions:
 \begin{enumerate}
 \item Does the floating-point benchmark show a different instruction mix from the integer benchmark?
@@ -241,7 +200,7 @@ This repository includes a small program that is better for observing a differen
 \begin{lstlisting}
 labs/o2_o3_diff.c
 \end{lstlisting}
-The program repeatedly calls a small function inside a loop. With \texttt{-O3}, the compiler can be more aggressive about inlining the function body into the loop, reducing function-call and branch overhead.
+Use the provided source file \texttt{labs/o2\_o3\_diff.c}. The program repeatedly calls a small function inside a loop. With \texttt{-O3}, the compiler can be more aggressive about inlining the function body into the loop, reducing function-call and branch overhead.
 Compile:
 \begin{lstlisting}
 toolchain/sslittle-na-sstrix/bin/gcc -O2 -static -o labs/o2_o3_diff_O2.pisa labs/o2_o3_diff.c
@@ -277,24 +236,23 @@ grep -E "load|store|uncond branch|cond branch|int computation|fp computation" la
 grep -E "load|store|uncond branch|cond branch|int computation|fp computation" labs/o2_o3_diff_O3_profile.out
 \end{lstlisting}
 Fill Table 4.
-\begin{center}
-\scriptsize
-\begin{longtable}{|p{0.18\linewidth}|p{0.18\linewidth}|p{0.18\linewidth}|p{0.18\linewidth}|p{0.18\linewidth}|}
-\hline
-Version & Program output & Total instructions & Total elapsed time & Unconditional branch count \\
-\hline
-\endfirsthead
-\hline
-Version & Program output & Total instructions & Total elapsed time & Unconditional branch count \\
-\hline
-\endhead
+\begin{table}[htbp]
+\centering
+\caption{Comparison of \texttt{-O2} and \texttt{-O3} on \texttt{o2\_o3\_diff.c}}
+\label{tab:o2-o3-diff-results}
+\small
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.18}
+\begin{tabularx}{\textwidth}{@{}L L c c c@{}}
+\toprule
+Version & Program output & \shortstack{Total\\instructions} &
+\shortstack{Total elapsed\\time} & \shortstack{Unconditional\\branch count} \\
+\midrule
 \texttt{-O2} &  &  &  &  \\
-\hline
 \texttt{-O3} &  &  &  &  \\
-\hline
-\end{longtable}
-\normalsize
-\end{center}
+\bottomrule
+\end{tabularx}
+\end{table}
 Questions:
 \begin{enumerate}
 \item Which optimization level executes fewer instructions?
