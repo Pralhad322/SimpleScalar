@@ -8,25 +8,101 @@ http://www.ecs.umass.edu/ece/koren/architecture/Simplescalar/bonuslab1.htm
 ```
 
 The current repository uses a local installer script instead of the older manual compiler installation process.
+
 ## Part 1: Install the Local PISA Compiler
 
-Run from the cloned repository root:
+### Installation Checklist
+
+Before installing the cross compiler on an Ubuntu/Debian lab PC, check that:
+
+- The repository has been cloned or copied completely, including `SimpleScalar/SimpleScalar.zip`.
+- The PC is an x86 or x86-64 Linux system.
+- At least 500 MB of free disk space is available for extracted sources, build files, and the installed toolchain.
+- The user has `sudo` access for installing host packages, or a lab administrator has installed them in advance.
+- Internet access is needed only for installing the Ubuntu/Debian packages. The cross-compiler sources are bundled in the repository.
+
+Install the required host packages:
+
 ```bash
-cd /path/to/SimpleScalar
-bash scripts/install_pisa_cross_compiler.sh --install-deps
+sudo apt-get update
+sudo apt-get install -y \
+  build-essential gcc make flex bison unzip file perl gawk \
+  sed grep coreutils findutils
 ```
 
-If the required Ubuntu/Debian build packages are already installed:
+These packages provide the following required tools:
+
+| Package | Purpose |
+| --- | --- |
+| `build-essential`, `gcc`, `make` | Compile the legacy binutils and GCC sources. |
+| `flex`, `bison` | Generate the compiler's lexer and parser. |
+| `unzip` | Extract the bundled toolchain source archive. |
+| `file` | Verify that generated programs use MIPSEL ECOFF format. |
+| `perl`, `gawk`, `sed`, `grep` | Apply compatibility patches and process build files. |
+| `coreutils`, `findutils` | Supply standard file and directory utilities used by the installer. |
+
+Verify the important commands before starting the long build:
+
 ```bash
+command -v gcc make flex bison unzip file perl gawk sed grep find
+flex --version
+bison --version
+```
+
+Every `command -v` entry should print a path. If a command is missing, ask the lab administrator to install the corresponding package.
+
+### Build and Install
+
+Run the installer from the cloned repository root:
+
+```bash
+cd /path/to/SimpleScalar
 bash scripts/install_pisa_cross_compiler.sh
 ```
 
-The compiler is installed locally:
+Alternatively, the installer can install the Ubuntu/Debian dependencies before building when the user has working `sudo` access:
+
+```bash
+bash scripts/install_pisa_cross_compiler.sh --install-deps
+```
+
+The build uses old GCC 2.7.2.3 and binutils 2.5.2 sources. Many warnings about implicit function declarations may appear on a modern host; warnings alone do not indicate failure. Wait for the final `Done` message and smoke-test output.
+
+The compiler is installed locally inside the repository; it is not installed system-wide:
+
 ```bash
 toolchain/sslittle-na-sstrix/bin/gcc
 ```
 
+### Verify the Installation
+
+Confirm that the compiler exists and reports version 2.7.2.3:
+
+```bash
+test -x toolchain/sslittle-na-sstrix/bin/gcc
+toolchain/sslittle-na-sstrix/bin/gcc --version
+```
+
+The installer automatically compiles and runs a smoke-test program. Its binary should be reported as:
+
+```text
+MIPSEL ECOFF executable
+```
+
+To repeat the format check manually:
+
+```bash
+file labs/hello_toolchain_test.pisa
+```
+
+If installation was interrupted or left a partial toolchain, rebuild it from scratch:
+
+```bash
+bash scripts/install_pisa_cross_compiler.sh --force
+```
+
 Do not use a generic `mips-linux-gnu-gcc`; it normally produces incompatible Linux ELF binaries instead of SimpleScalar PISA ECOFF/SSTrix binaries.
+
 ## Provided Source Programs
 
 All C programs used in this lab are included in the repository. Students should compile these files directly instead of copying program text from a handout:
