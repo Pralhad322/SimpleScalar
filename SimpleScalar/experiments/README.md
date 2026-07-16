@@ -33,12 +33,11 @@ cd /path/to/SimpleScalar
 - Lab 2: in-order and out-of-order pipelined processors. File: `02_processor_design_lab.md`. Simulator: `sim-outorder`.
 - Lab 2 extension: superscalar bottleneck and design-space analysis. File: `03_processor_design_home_assignment.md`. Simulator: `sim-outorder`.
 - Lab 3: branch predictor accuracy and CPI impact. File: `04_branch_prediction_lab.md`. Simulators: `sim-bpred`, `sim-outorder`.
-- Lab 4: educational single-cycle processor model. File: `05_singlecycle_processor_lab.md`. Simulator: `sim-singlecycle`.
 - Lab 5: compile custom C programs for PISA. File: `06_compiling_custom_c_for_pisa.md`. Simulators: `sim-safe`, `sim-profile`.
 
 ## Notes
 
 - Lab 1 uses Alpha and PISA builds. Rebuild with `make clean` before switching ISA targets.
-- Labs 2, 4, and 5 use PISA.
+- Labs 2 and 5 use PISA.
 - Lab 3 uses Alpha benchmarks for branch prediction, matching the original UMass SimpleScalar reference lab.
 - The local PISA cross compiler is installed under `toolchain/` by `scripts/install_pisa_cross_compiler.sh`; it is not committed to the repository.
