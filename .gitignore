@@ -23,3 +23,4 @@ SimpleScalar/experiments/*.aux
 SimpleScalar/experiments/*.log
 SimpleScalar/experiments/*.out
 SimpleScalar/experiments/*.toc
+SimpleScalar/experiments/05_singlecycle_processor_lab.md
