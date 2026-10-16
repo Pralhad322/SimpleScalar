@@ -3,10 +3,6 @@
 ## Objective
 
 This lab studies the effect of branch prediction schemes on branch address prediction rate and processor CPI/IPC. The lab uses `sim-bpred` for branch predictor statistics and `sim-outorder` for timing impact.
-The structure follows the UMass SimpleScalar branch prediction lab, with paths updated for the current repository layout:
-```bash
-http://www.ecs.umass.edu/ece/koren/architecture/Simplescalar/branch_prediction.htm
-```
 
 Run all commands from the cloned repository root.
 ```bash

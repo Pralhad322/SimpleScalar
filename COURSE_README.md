@@ -29,13 +29,13 @@ bash scripts/install_pisa_cross_compiler.sh
 Start with:
 
 ```text
-SimpleScalar/experiments/README.md
+experiments/README.md
 ```
 
 The custom C compilation lab is:
 
 ```text
-SimpleScalar/experiments/06_compiling_custom_c_for_pisa.md
+experiments/06_compiling_custom_c_for_pisa.md
 ```
 
 ## Important Notes

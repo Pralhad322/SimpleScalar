@@ -2,10 +2,7 @@
 
 ## Objective
 
-This lab shows how to write C programs, compile them for the SimpleScalar PISA little-endian target, and run them with the simulators. It follows the idea of the UMass SimpleScalar bonus compilation lab, with commands updated for this repository:
-```bash
-http://www.ecs.umass.edu/ece/koren/architecture/Simplescalar/bonuslab1.htm
-```
+This lab shows how to write C programs, compile them for the SimpleScalar PISA little-endian target, and run them with the simulators.
 
 The current repository uses a local installer script instead of the older manual compiler installation process.
 
@@ -15,7 +12,7 @@ The current repository uses a local installer script instead of the older manual
 
 Before installing the cross compiler on an Ubuntu/Debian lab PC, check that:
 
-- The repository has been cloned or copied completely, including `SimpleScalar/SimpleScalar.zip`.
+- The repository has been cloned or copied completely, including `SimpleScalar.zip`.
 - The PC is an x86 or x86-64 Linux system.
 - At least 500 MB of free disk space is available for extracted sources, build files, and the installed toolchain.
 - The user has `sudo` access for installing host packages, or a lab administrator has installed them in advance.
@@ -107,10 +104,10 @@ Do not use a generic `mips-linux-gnu-gcc`; it normally produces incompatible Lin
 
 All C programs used in this lab are included in the repository. Students should compile these files directly instead of copying program text from a handout:
 
-- [`labs/hello_loop.c`](../../labs/hello_loop.c)
-- [`labs/test1.c`](../../labs/test1.c)
-- [`labs/test2.c`](../../labs/test2.c)
-- [`labs/o2_o3_diff.c`](../../labs/o2_o3_diff.c)
+- [`labs/hello_loop.c`](../labs/hello_loop.c)
+- [`labs/test1.c`](../labs/test1.c)
+- [`labs/test2.c`](../labs/test2.c)
+- [`labs/o2_o3_diff.c`](../labs/o2_o3_diff.c)
 
 To inspect a program before compiling it:
 ```bash
@@ -119,7 +116,7 @@ less labs/hello_loop.c
 
 ## Part 2: Hello Program With a Long Loop
 
-Use the provided source file [`labs/hello_loop.c`](../../labs/hello_loop.c). This program runs a long empty loop and then prints a message.
+Use the provided source file [`labs/hello_loop.c`](../labs/hello_loop.c). This program runs a long empty loop and then prints a message.
 Compile without optimization:
 ```bash
 toolchain/sslittle-na-sstrix/bin/gcc -static -o labs/hello_noopt.pisa labs/hello_loop.c
@@ -175,7 +172,7 @@ Questions:
 
 ## Part 3: Integer Arithmetic Benchmark
 
-Use the provided source file [`labs/test1.c`](../../labs/test1.c). This program repeats a simple integer arithmetic expression inside a loop.
+Use the provided source file [`labs/test1.c`](../labs/test1.c). This program repeats a simple integer arithmetic expression inside a loop.
 Compile:
 ```bash
 toolchain/sslittle-na-sstrix/bin/gcc -static -o labs/test1_noopt.pisa labs/test1.c
@@ -208,7 +205,7 @@ Fill Table 2 using `sim_num_insn`, `sim_elapsed_time`, and the instruction class
 
 ## Part 4: Floating-Point Arithmetic Benchmark
 
-Use the provided source file [`labs/test2.c`](../../labs/test2.c). This program is similar to [`labs/test1.c`](../../labs/test1.c), but the arithmetic variables are floating-point values.
+Use the provided source file [`labs/test2.c`](../labs/test2.c). This program is similar to [`labs/test1.c`](../labs/test1.c), but the arithmetic variables are floating-point values.
 Compile:
 ```bash
 toolchain/sslittle-na-sstrix/bin/gcc -static -o labs/test2_noopt.pisa labs/test2.c
@@ -249,9 +246,9 @@ Questions:
 
 The earlier examples may produce the same result for `-O2` and `-O3`. This can happen when `-O2` has already performed the useful optimizations for a simple loop.
 This repository includes a small program that is better for observing a difference:
-[`labs/o2_o3_diff.c`](../../labs/o2_o3_diff.c)
+[`labs/o2_o3_diff.c`](../labs/o2_o3_diff.c)
 
-Use the provided source file [`labs/o2_o3_diff.c`](../../labs/o2_o3_diff.c). The program repeatedly calls a small function inside a loop. With `-O3`, the compiler can be more aggressive about inlining the function body into the loop, reducing function-call and branch overhead.
+Use the provided source file [`labs/o2_o3_diff.c`](../labs/o2_o3_diff.c). The program repeatedly calls a small function inside a loop. With `-O3`, the compiler can be more aggressive about inlining the function body into the loop, reducing function-call and branch overhead.
 Compile:
 ```bash
 toolchain/sslittle-na-sstrix/bin/gcc -O2 -static -o labs/o2_o3_diff_O2.pisa labs/o2_o3_diff.c

@@ -6,10 +6,9 @@ Repository layout after cloning:
 SimpleScalar/
   benchmarks/
   config/
+  experiments/
   labs/
   scripts/
-  SimpleScalar/
-    experiments/
   tests-alpha/
   tests-pisa/
   sim-fast.c
@@ -39,5 +38,5 @@ cd /path/to/SimpleScalar
 
 - Lab 1 uses Alpha and PISA builds. Rebuild with `make clean` before switching ISA targets.
 - Labs 2 and 5 use PISA.
-- Lab 3 uses Alpha benchmarks for branch prediction, matching the original UMass SimpleScalar reference lab.
+- Lab 3 uses Alpha benchmarks for branch prediction.
 - The local PISA cross compiler is installed under `toolchain/` by `scripts/install_pisa_cross_compiler.sh`; it is not committed to the repository.
