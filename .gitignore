@@ -17,6 +17,7 @@ labs/*.trc
 labs/*.pisa
 labs/hello_toolchain_test.c
 scripts/generate_experiment_markdown.py
+SimpleScalar/*.pdf
 SimpleScalar/experiments/*.tex
 SimpleScalar/experiments/*.pdf
 SimpleScalar/experiments/*.aux
