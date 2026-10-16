@@ -55,7 +55,7 @@ done
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
-ZIP="$ROOT/SimpleScalar/SimpleScalar.zip"
+ZIP="$ROOT/SimpleScalar.zip"
 TOOLCHAIN_DIR="$ROOT/toolchain"
 SRC_BASE="$TOOLCHAIN_DIR/src"
 SRCROOT="$SRC_BASE/SimpleScalar/simplesim"
